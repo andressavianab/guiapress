@@ -1,6 +1,10 @@
 const express = require("express");
 const app = express();
 const bodyParser = require('body-parser');
+const path = require('path');
+
+//importing all the CategoriesController script to this file
+const categoriesController = require('./categories/CategoriesController');
 
 //to use 'connection' function, import from database/database.js
 const connection = require('./database/database');
@@ -14,6 +18,7 @@ const port = 8080;
     app.use(bodyParser.json());
 
 //view (to render the ejs files aka frontend)
+app.set('views', path.join('src', 'views'));
 app.set('view engine', 'ejs');
 
 //static files config (to node work with images and css files)
@@ -26,6 +31,10 @@ connection.authenticate()
 }).catch((error) => {
     console.log(error)
 });
+
+/*"telling" the express server i want to use the categoriesController
+script, the routes!*/
+app.use('/', categoriesController);
 
 app.get("/", (req, res) => {
     res.render("index");
