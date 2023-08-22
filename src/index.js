@@ -5,6 +5,7 @@ const path = require('path');
 
 //importing all the CategoriesController script to this file
 const categoriesController = require('./categories/CategoriesController');
+const articlesController = require('./articles/ArticlesController');
 
 //to use 'connection' function, import from database/database.js
 const connection = require('./database/database');
@@ -35,6 +36,7 @@ connection.authenticate()
 /*"telling" the express server i want to use the categoriesController
 script, the routes!*/
 app.use('/', categoriesController);
+app.use('/', articlesController);
 
 app.get("/", (req, res) => {
     res.render("index");

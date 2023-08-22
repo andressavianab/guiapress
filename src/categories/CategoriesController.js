@@ -2,7 +2,11 @@ const app = require('express');
 const router = app.Router();
 
 router.get('/categories', (req, res) => {
-    res.send('testing categorie route!')
+    res.send('testing categorie route!');
+});
+
+router.get('/admin/categories/new', (req, res) => {
+    res.send('route to create a new categorie');
 });
 
 module.exports = router;
