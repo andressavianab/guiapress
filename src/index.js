@@ -9,6 +9,8 @@ const articlesController = require('./articles/ArticlesController');
 
 //to use 'connection' function, import from database/database.js
 const connection = require('./database/database');
+const Article = require("./articles/articleModel")
+const Category = require("./categories/categoryModel");
 
 const port = 8080;
 
