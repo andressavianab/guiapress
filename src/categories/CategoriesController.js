@@ -6,7 +6,7 @@ router.get('/categories', (req, res) => {
 });
 
 router.get('/admin/categories/new', (req, res) => {
-    res.send('route to create a new categorie');
+    res.render('admin/categories/new.ejs');
 });
 
 module.exports = router;
