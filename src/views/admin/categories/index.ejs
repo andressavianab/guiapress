@@ -3,6 +3,7 @@
 <div class="container">
     <hr>
     <h2>Categories</h2>
+    <a href="/admin/categories/new" class="btn btn-success">Create new category</a>
     <hr>
     <table class="table table-bordered">
         <thead>
@@ -27,7 +28,12 @@
                     <th><%= category.id %></th>
                     <th><%= category.title %></th>
                     <th><%= category.slug %></th>
-                    <th></th>
+                    <th>
+                        <button class="btn btn-warning">Edit</button>
+                        <form method="POST" action="/categories/delete" style="display: inline;">
+                            <button name="id" value="<%= category.id %>" class="btn btn-danger">Delet</button>
+                        </form> <!-- dynamically setting the id of each category -->
+                    </th>
                 </tr>
             <% }); %> <!-- consuming the categories database -->
         </tbody>
