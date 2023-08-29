@@ -21,9 +21,14 @@ router.post('/categories/save', (req, res) => {
     }
 });
 
+router.get("/admin/categories", (req, res) => {
+    Category.findAll().then(categories => {
+        res.render('./admin/categories/index', {categories: categories})
+    });  // function to consume the category data from the frontend
+});  
 
 module.exports = router;
-/*to use the route /categories in index.js or in any other file, 
+/* to use the route /categories in index.js or in any other file, 
 we have to export the variable 'router' */ 
 
 //https://expressjs.com/en/4x/api.html#router docs about this 
