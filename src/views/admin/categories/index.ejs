@@ -29,7 +29,7 @@
                     <th><%= category.title %></th>
                     <th><%= category.slug %></th>
                     <th>
-                        <button class="btn btn-warning">Edit</button>
+                        <a href="/admin/categories/edit/<%= category.id %>" class="btn btn-warning">Edit</a> <!--dynamically setting the edit route of each category-->
                         <form method="POST" action="/categories/delete" style="display: inline;">
                             <button name="id" value="<%= category.id %>" class="btn btn-danger">Delet</button>
                         </form> <!-- dynamically setting the id of each category -->
