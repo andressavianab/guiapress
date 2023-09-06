@@ -1,0 +1,30 @@
+<%- include ('../../partials/header.ejs') %>
+<%- include ('../../partials/navbar.ejs') %>
+
+<div class="container">
+    <hr>
+    <div class="card">
+        <div class="card-header">
+            <h2>Edit the Article: <%= article.title %> </h2>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="/articles/update">
+                <input class="form-control" type="text" name="title" placeholder="Update the article title">
+                <br> 
+                <textarea class="form-control" placeholder="Write the article" name="body" id="mytextarea" cols="30" rows="10">
+                    <%= article.body %>
+                </textarea><br>
+                <label> Category:
+                    <select name="categoryId" class="form-control">
+                        <% categories.forEach((category) => {  %>
+                            <option value="<%= category.id %>"> <%= category.title %> </option>
+                        <% }) %>
+                    </select>
+                </label> 
+                <button class="btn btn-success" name="id" value="<%= article.id %>">Update!</button> <!--the button is also sending the id to the query!!!-->
+            </form>
+        </div>
+    </div>
+</div>
+
+<%- include ('../../partials/footer.ejs') %>
