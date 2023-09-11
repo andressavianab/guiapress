@@ -40,8 +40,63 @@ script, the routes!*/
 app.use('/', categoriesController);
 app.use('/', articlesController);
 
+//index route
 app.get("/", (req, res) => {
-    res.render("index");
+    Article.findAll({
+        order: [
+            ['id', 'DESC']
+        ] /* to order by ID */
+    }).then(articles => {
+        Category.findAll().then( categories => {
+            res.render("index", {articles: articles, categories: categories});
+        }) /* to also send the categories to the homenav partial */
+    })
+}); 
+
+//route to read the article
+app.get('/:slug', (req, res) => {
+    var slug = req.params.slug;
+
+    Article.findOne({
+        where: {
+            slug: slug
+        }
+    }).then(article => {
+        Category.findAll().then(categories => {
+            if(article != undefined) {
+                res.render("article", {article: article, categories: categories}); /* to also send the categories to the homenav partial */
+            } else {
+                res.redirect("/");
+            }
+        })
+    }).catch(error => {
+        res.redirect('/');
+    })
+});
+
+//route to filter the articles by categories
+app.get("/category/:slug", (req, res) => {
+    var slug = req.params.slug
+
+    Category.findOne({
+        where: {
+            slug: slug
+        }, include: [
+            {
+                model: Article
+            }
+        ] //to filter the article by the category
+    }).then(category => {
+        if(category != undefined) {
+            Category.findAll().then(categories => {
+                res.render("index", {articles: category.Articles, categories: categories})
+            }); //to render the articles by the category
+        } else {
+            res.redirect("/");
+        }
+    }).catch(error => {
+        res.redirect("/");
+    });
 });
 
 app.listen(port, () => {

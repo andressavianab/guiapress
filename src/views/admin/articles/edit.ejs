@@ -9,7 +9,7 @@
         </div>
         <div class="card-body">
             <form method="POST" action="/articles/update">
-                <input class="form-control" type="text" name="title" placeholder="Update the article title">
+                <input class="form-control" type="text" name="title" placeholder="Update the article title" value="<%= article.title %>">
                 <br> 
                 <textarea class="form-control" placeholder="Write the article" name="body" id="mytextarea" cols="30" rows="10">
                     <%= article.body %>

@@ -68,18 +68,20 @@ router.get('/articles/edit/:id', (req, res) => {
             res.redirect('/admin/article');
         }
     });
-
 });
 
 router.post('/articles/update', (req, res) => {
     const title = req.body.title;
     const body = req.body.body;
     const id = req.body.id;
+    const categoryId = req.body.categoryId;
 
     Article.update(
         {
             title: title,
-            body: body
+            body: body,
+            slug:  slug(title),
+            CategoryId: categoryId
         }, {
             where: {
                 id: id
