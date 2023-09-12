@@ -80,7 +80,7 @@ router.post('/articles/update', (req, res) => {
         {
             title: title,
             body: body,
-            slug:  slug(title),
+            slug: slug(title),
             CategoryId: categoryId
         }, {
             where: {
