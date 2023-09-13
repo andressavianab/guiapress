@@ -87,7 +87,43 @@ router.post('/articles/update', (req, res) => {
                 id: id
             }
         }
-    ).then(res.redirect('/admin/articles'))
-})
+    ).then(res.redirect('/admin/articles'));
+});
+
+router.get("/articles/page/:num", (req, res) => {
+    var page = req.params.num;
+    var offset = 0;
+    
+    if(isNaN(page) || page == 1) {
+        offset = 0;
+    } else {
+        offset = parseInt(page - 1) * 4;
+    }
+
+    Article.findAndCountAll({
+        order: [
+            ['id', 'DESC']
+        ],
+        limit: 4,
+        offset: offset
+    }).then(articles => {       
+        let next;
+        if(offset + 4 >= articles.count) {
+            next = false;
+        } else {
+            next = true;
+        }
+
+        var result = {
+            page: parseInt(page),
+            next: next,
+            articles: articles
+        }
+
+        Category.findAll().then(categories => {
+            res.render('admin/articles/page', {categories: categories, result: result});
+        });
+    });
+});
 
 module.exports = router;
