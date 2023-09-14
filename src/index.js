@@ -6,11 +6,13 @@ const path = require('path');
 //importing all the CategoriesController script to this file
 const categoriesController = require('./categories/CategoriesController');
 const articlesController = require('./articles/ArticlesController');
+const usersController = require('./user/UsersController');
 
 //to use 'connection' function, import from database/database.js
 const connection = require('./database/database');
 const Article = require("./articles/articleModel")
 const Category = require("./categories/categoryModel");
+const User = require("./user/userModel");
 
 const port = 8080;
 
@@ -39,6 +41,7 @@ connection.authenticate()
 script, the routes!*/
 app.use('/', categoriesController);
 app.use('/', articlesController);
+app.use('/', usersController);
 
 //index route
 app.get("/", (req, res) => {
