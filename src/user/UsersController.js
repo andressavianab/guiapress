@@ -5,11 +5,13 @@ const bcrypt = require('bcrypt');
 
 
 router.get("/admin/users", (req, res) => {
-    res.send("hi");
+    User.findAll().then((users) => {
+        res.render("admin/users/index", {users: users});
+    });
 });
 
-router.get("/admin/users/create", (req, res) => {
-    res.render("admin/users/create");
+router.get("/admin/users/new", (req, res) => {
+    res.render("admin/users/new");
 });
 
 router.post("/users/save", (req, res) => {
