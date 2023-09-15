@@ -31,11 +31,11 @@ router.post("/users/save", adminAuth, (req, res) => {
                     email: email,
                     password: hash
                 }).then(() => {
-                    res.redirect("/admin/users/create");
+                    res.redirect("/admin/users/new");
                 });
             });
         } else {
-            res.redirect("/admin/users/create");
+            res.redirect("/admin/users/new");
         }
     });
 });
