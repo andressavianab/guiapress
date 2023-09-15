@@ -21,7 +21,7 @@ router.get('/admin/articles/new', adminAuth, (req, res) => {
     });
 });
 
-router.post('/articles/save', (req, res) => {
+router.post('/articles/save', adminAuth, (req, res) => {
     const title = req.body.title
     const body = req.body.body
     const categoryId = req.body.categoryId
@@ -41,7 +41,7 @@ router.post('/articles/save', (req, res) => {
     }
 });
 
-router.post('/articles/delet', (req, res) => {
+router.post('/articles/delet', adminAuth, (req, res) => {
     const id = req.body.id
 
     Article.destroy(
@@ -53,7 +53,7 @@ router.post('/articles/delet', (req, res) => {
     ).then(res.redirect('/admin/articles'));
 });
 
-router.get('/articles/edit/:id', (req, res) => {
+router.get('/articles/edit/:id', adminAuth, (req, res) => {
     var id = req.params.id;
 
     if(isNaN(id)) {
@@ -71,7 +71,7 @@ router.get('/articles/edit/:id', (req, res) => {
     });
 });
 
-router.post('/articles/update', (req, res) => {
+router.post('/articles/update', adminAuth, (req, res) => {
     const title = req.body.title;
     const body = req.body.body;
     const id = req.body.id;
