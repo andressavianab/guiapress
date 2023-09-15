@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
+const session = require('express-session');
 
 //importing all the CategoriesController script to this file
 const categoriesController = require('./categories/CategoriesController');
@@ -28,6 +29,14 @@ app.set('view engine', 'ejs');
 
 //static files config (to node work with images and css files)
 app.use(express.static("public"));
+
+//session config https://www.npmjs.com/package/express-session
+app.use(session({
+    secret: "keyboard cat",
+    cookie: {
+        maxAge: 604800000
+    }
+}));
 
 //athenticating to database
 connection.authenticate()
