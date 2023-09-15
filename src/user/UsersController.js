@@ -2,19 +2,20 @@ const app = require("express");
 const router = app.Router();
 const User = require('./userModel');
 const bcrypt = require('bcrypt');
+const adminAuth = require('../middlewares/adminAuth');
 
 
-router.get("/admin/users", (req, res) => {
+router.get("/admin/users", adminAuth, (req, res) => {
     User.findAll().then((users) => {
         res.render("admin/users/index", {users: users});
     });
 });
 
-router.get("/admin/users/new", (req, res) => {
+router.get("/admin/users/new", adminAuth, (req, res) => {
     res.render("admin/users/new");
 });
 
-router.post("/users/save", (req, res) => {
+router.post("/users/save", adminAuth, (req, res) => {
     const saltRounds = 10;
     var email = req.body.email;
     var password = req.body.password;
@@ -30,11 +31,11 @@ router.post("/users/save", (req, res) => {
                     email: email,
                     password: hash
                 }).then(() => {
-                    res.redirect("/admin/users/create");
+                    res.redirect("/admin/users/new");
                 });
             });
         } else {
-            res.redirect("/admin/users/create");
+            res.redirect("/admin/users/new");
         }
     });
 });
