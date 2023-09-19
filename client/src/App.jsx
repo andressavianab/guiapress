@@ -1,8 +1,9 @@
-export const App = () => {
+import { Default } from "./layouts/home/Default"
 
+export const App = () => {
   return (
     <>
-    <h1>Hello world</h1>
+    <Default />
     </>
   )
 }
