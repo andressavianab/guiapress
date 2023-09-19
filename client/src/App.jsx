@@ -1,9 +1,10 @@
-import { Default } from "./layouts/home/Default"
+import { BrowserRouter } from "react-router-dom"
+import { Router } from "./Routes"
 
 export const App = () => {
   return (
-    <>
-    <Default />
-    </>
+    <BrowserRouter>
+    <Router />
+    </BrowserRouter>
   )
 }

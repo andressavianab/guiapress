@@ -4,12 +4,12 @@ import { Header } from "../../components/home/Header"
 export const Default = () => {
     return(
         <>
-            <main className="w-full h-screen bg-slate-900">  
+            <div className="w-full h-screen bg-slate-900">  
                 <Header />  
                 <div className="max-w-5xl m-auto h-screen">
                     <Outlet />
                 </div>
-        </main>        
+            </div>        
         </>
     )
 }
