@@ -55,22 +55,6 @@ app.use('/', categoriesController);
 app.use('/', articlesController);
 app.use('/', usersController);
 
-//index route
-app.get("/articles", (req, res) => {
-    try {
-        Article.findAll({
-        order: [
-            ['id', 'DESC']
-        ],
-    }).then(articles => {
-            res.statusCode = 200;    
-            res.json({articles: articles});
-    }); 
-    } catch (err) {
-    res.status(500).send({message: err.message})
-   }
-}); 
-
 //route to read the article
 app.get('/:slug', (req, res) => {
     var slug = req.params.slug;
