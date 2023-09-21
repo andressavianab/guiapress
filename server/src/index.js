@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
 const session = require('express-session');
+const cors = require('cors');
 
 //importing all the CategoriesController script to this file
 const categoriesController = require('./categories/CategoriesController');
@@ -16,6 +17,8 @@ const Category = require("./categories/categoryModel");
 const User = require("./user/userModel");
 
 const port = 8080;
+
+app.use(cors());
 
 //bodyparser configs (to work with forms)
     // parse applicaction/x-www-form-urlencoded
@@ -53,17 +56,19 @@ app.use('/', articlesController);
 app.use('/', usersController);
 
 //index route
-app.get("/", (req, res) => {
-    Article.findAll({
+app.get("/articles", (req, res) => {
+    try {
+        Article.findAll({
         order: [
             ['id', 'DESC']
         ],
-        limit: 4 /* to order by ID */
     }).then(articles => {
-        Category.findAll().then( categories => {
-            res.render("index", {articles: articles, categories: categories});
-        }) /* to also send the categories to the homenav partial */
-    })
+            res.statusCode = 200;    
+            res.json({articles: articles});
+    }); 
+    } catch (err) {
+    res.status(500).send({message: err.message})
+   }
 }); 
 
 //route to read the article
