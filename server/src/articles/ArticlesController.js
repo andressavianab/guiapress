@@ -32,7 +32,7 @@ router.post("/articles/save", (req, res) => {
         CategoryId: categoryId,
         slug: slug(title),
       }).then(() => {
-        res.status(200).send({ message: "Article created succesfully" });
+        res.status(200).send({ message: "Article created successfully" });
       });
     }
   } catch (err) {
@@ -66,7 +66,7 @@ router.delete("/articles/delet/:id", (req, res) => {
 
 router.put("/articles/edit/:id", (req, res) => {
   try {
-    const id = req.params.id;
+    const id = parseInt(req.params.id);
 
     if (isNaN(id)) {
       res.status(400).send({ message: "Please send a numerical parameter" });
@@ -75,8 +75,8 @@ router.put("/articles/edit/:id", (req, res) => {
     Article.findByPk(id).then((article) => {
       if (article === null) {
         res.status(404).send({ message: "Article not found" });
-      } else if (article != undefined) {
-        const { title, body, categoryId } = req.body;
+      } else {
+        var { title, body, categoryId } = req.body;
 
         if (title != undefined) {
           article.title = title;
@@ -95,6 +95,7 @@ router.put("/articles/edit/:id", (req, res) => {
             title: title,
             body: body,
             CategoryId: categoryId,
+            slug: slug(title),
           },
           {
             where: {
