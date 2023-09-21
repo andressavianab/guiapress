@@ -1,130 +1,114 @@
-const app = require('express');
+const app = require("express");
 const router = app.Router();
-const Category = require('../categories/categoryModel');
-const Article = require('./articleModel');
-const slug = require('slugify');
-const adminAuth = require('../middlewares/adminAuth');
+const Category = require("../categories/categoryModel");
+const Article = require("./articleModel");
+const slug = require("slugify");
+const adminAuth = require("../middlewares/adminAuth");
 
-router.get('/admin/articles', adminAuth, (req, res) => {
+router.get("/articles", (req, res) => {
+  try {
     Article.findAll({
-        include: [
-            {model: Category}
-        ]  //Including category data by table relationship (association)
-    }).then(articles => {   
-        res.render("admin/articles/index", {articles: articles}); 
+      include: [{ model: Category }], //Including category data by table relationship (association)
+    }).then((articles) => {
+      res.json({ Articles: articles, Category: Category });
     });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
 });
 
-router.get('/admin/articles/new', adminAuth, (req, res) => {
-    Category.findAll().then(categories => {
-        res.render('admin/articles/new', {categories: categories});
-    });
-});
+router.post("/articles/save", (req, res) => {
+  try {
+    const { title, body, categoryId } = req.body;
 
-router.post('/articles/save', adminAuth, (req, res) => {
-    const title = req.body.title
-    const body = req.body.body
-    const categoryId = req.body.categoryId
-
-    // this validation isnt working ill fix this later =D
-    if (title != undefined && body != undefined && body != null) {
-        Article.create(
-            {
-                title: title,
-                body: body,
-                CategoryId: categoryId,
-                slug: slug(title)
-            }
-        ).then(res.redirect('/admin/articles'));
+    if (!title || !body || !categoryId) {
+      res
+        .status(400)
+        .send({ message: "Please submit all fields to create the article" });
     } else {
-        res.redirect('/admin/articles');
+      Article.create({
+        title: title,
+        body: body,
+        CategoryId: categoryId,
+        slug: slug(title),
+      }).then(() => {
+        res.status(200).send({ message: "Article created successfully" });
+      });
     }
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
 });
 
-router.post('/articles/delet', adminAuth, (req, res) => {
-    const id = req.body.id
+router.delete("/articles/delet/:id", (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
 
-    Article.destroy(
-        {
-            where: {
-                id: id
-            }
-        }
-    ).then(res.redirect('/admin/articles'));
-});
+    if (isNaN(id)) {
+      res.status(400).send({ message: "Please send a numerical parameter" });
+    }
 
-router.get('/articles/edit/:id', adminAuth, (req, res) => {
-    var id = req.params.id;
-
-    if(isNaN(id)) {
-        res.redirect("/admin/articles");
-    };
-
-    Article.findByPk(id).then(article => {
-        if(article != undefined) {
-            Category.findAll().then(categories => {
-                res.render('./admin/articles/edit', {categories: categories, article: article})
-            })
-        } else {
-            res.redirect('/admin/article');
-        }
+    Article.findByPk(id).then((article) => {
+      if (article === null) {
+        res.status(404).send({ message: "Article not found" });
+      } else {
+        Article.destroy({
+          where: {
+            id: id,
+          },
+        }).then(res.status(200).send({ message: "Article deleted" }));
+      }
     });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
 });
 
-router.post('/articles/update', adminAuth, (req, res) => {
-    const title = req.body.title;
-    const body = req.body.body;
-    const id = req.body.id;
-    const categoryId = req.body.categoryId;
+router.put("/articles/edit/:id", (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
 
-    Article.update(
-        {
+    if (isNaN(id)) {
+      res.status(400).send({ message: "Please send a numerical parameter" });
+    }
+
+    Article.findByPk(id).then((article) => {
+      if (article === null) {
+        res.status(404).send({ message: "Article not found" });
+      } else {
+        var { title, body, categoryId } = req.body;
+
+        if (title != undefined) {
+          article.title = title;
+        }
+
+        if (body != undefined) {
+          article.body = body;
+        }
+
+        if (categoryId != undefined) {
+          article.CategoryId = categoryId;
+        }
+
+        Article.update(
+          {
             title: title,
             body: body,
+            CategoryId: categoryId,
             slug: slug(title),
-            CategoryId: categoryId
-        }, {
+          },
+          {
             where: {
-                id: id
-            }
-        }
-    ).then(res.redirect('/admin/articles'));
-});
-
-router.get("/articles/page/:num", (req, res) => {
-    var page = req.params.num;
-    var offset = 0;
-    
-    if(isNaN(page) || page == 1) {
-        offset = 0;
-    } else {
-        offset = parseInt(page - 1) * 4;
-    }
-
-    Article.findAndCountAll({
-        order: [
-            ['id', 'DESC']
-        ],
-        limit: 4,
-        offset: offset
-    }).then(articles => {       
-        let next;
-        if(offset + 4 >= articles.count) {
-            next = false;
-        } else {
-            next = true;
-        }
-
-        var result = {
-            page: parseInt(page),
-            next: next,
-            articles: articles
-        }
-
-        Category.findAll().then(categories => {
-            res.render('admin/articles/page', {categories: categories, result: result});
-        });
+              id: id,
+            },
+          }
+        );
+        res.status(200).send({ message: "Updated article" });
+      }
     });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
 });
 
 module.exports = router;
